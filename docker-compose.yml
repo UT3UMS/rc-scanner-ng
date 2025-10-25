@@ -1,0 +1,19 @@
+services:
+  rc-scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rc-scanner
+    restart: unless-stopped
+    devices:
+      - "/dev/bcd436hpSerial:/dev/ttyACM0"   # Uniden scanner
+      - "/dev/snd:/dev/snd"           # audio
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app                # mount local project for live edits
+    working_dir: /usr/src/app
+    environment:
+      - CXXFLAGS=-Wno-error -Wno-unused-variable -Wno-mismatched-new-delete
+      - DEBUG=true
+    command: ["npm", "run", "start"]
